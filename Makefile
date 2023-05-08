@@ -1,6 +1,9 @@
 TARGET=bin/gn
 SRC=$(shell find . -type f -name '*.go' -not -path "./vendor/*" -not -path "*_test.go")
 
+LDFLAGS ?= "-s -w"
+BUILD_FLAGS ?= -v -ldflags ${LDFLAGS}
+
 .PHONY: test
 
 all: build
@@ -16,11 +19,11 @@ clean:
 	rm -f ${TARGET}
 
 test:
-	go test
+	go test ${TEST_FLAGS} ./...
 
 dep:
 	@rm -f go.mod go.sum
-	@go mod init github.com/whitekid/go-nc
+	@go mod init go-nc
 	@${MAKE} tidy
 
 tidy:

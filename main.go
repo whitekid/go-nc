@@ -1,6 +1,7 @@
 // netcat go version
 // Usage:
-// 	go-nc hostname port
+//
+//	go-nc hostname port
 //
 // - connect to hostname:port
 // - read stdin and send to socket
@@ -52,9 +53,8 @@ func (r *deadlineWriter) Write(p []byte) (n int, err error) {
 
 func proxy(conn net.Conn) {
 	var wg sync.WaitGroup
-	defer wg.Wait()
 
-	for _, rw := range []struct {
+	for _, rw := range [...]struct {
 		reader io.Reader
 		writer io.Writer
 	}{
@@ -74,6 +74,8 @@ func proxy(conn net.Conn) {
 			io.Copy(dst, src)
 		}(rw.reader, rw.writer)
 	}
+
+	wg.Wait()
 }
 
 func main() {
